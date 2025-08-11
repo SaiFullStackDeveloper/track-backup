@@ -243,7 +243,7 @@
     semver "7.7.2"
     yargs "17.7.2"
 
-"@angular/common@^20.0.0", "@angular/common@^20.0.0 || ^21.0.0", "@angular/common@>=19.0.0", "@angular/common@20.0.5":
+"@angular/common@^20.0.0", "@angular/common@^20.0.0 || ^21.0.0", "@angular/common@>=19.0.0", "@angular/common@>=9.0.0", "@angular/common@20.0.5":
   version "20.0.5"
   resolved "https://registry.npmjs.org/@angular/common/-/common-20.0.5.tgz"
   integrity sha512-R7SQaOVYjVnrGHOq2RnuPn0pGofGVTDgy5EoHzF8ulb5MG/d7GFwCaMgfAbp3/Cw1CJzP2ZB54O8x9SMuqExyg==
@@ -271,7 +271,7 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/core@^20.0.0", "@angular/core@^20.0.0 || ^21.0.0", "@angular/core@>=19.0.0", "@angular/core@20.0.5":
+"@angular/core@^20.0.0", "@angular/core@^20.0.0 || ^21.0.0", "@angular/core@>=19.0.0", "@angular/core@>=9.0.0", "@angular/core@20.0.5":
   version "20.0.5"
   resolved "https://registry.npmjs.org/@angular/core/-/core-20.0.5.tgz"
   integrity sha512-r7YQXZvKPAMUXeo3psKTZxyYJrwidTwDPrzxMX3EGqZxv0eDnMPWCxH2y0O2X4BT0Nm1iAqx3zhGrSFc0vD60Q==
@@ -4663,7 +4663,16 @@ ng-apexcharts@1.16.0:
   dependencies:
     tslib "^2.8.1"
 
-ngx-scrollbar@18.0.0:
+ngx-perfect-scrollbar@^10.1.1:
+  version "10.1.1"
+  resolved "https://registry.npmjs.org/ngx-perfect-scrollbar/-/ngx-perfect-scrollbar-10.1.1.tgz"
+  integrity sha512-f9IaDJGlBzSxnJ3Ki76n2JdzfQngUFyCf0E+CuVLaR5jL0IJDcTu7vOs8wexXunRMTd8xvIv0+sdIxf8hXAGWg==
+  dependencies:
+    perfect-scrollbar "1.5.0"
+    resize-observer-polyfill "^1.5.0"
+    tslib "^2.0.0"
+
+ngx-scrollbar@^18.0.0:
   version "18.0.0"
   resolved "https://registry.npmjs.org/ngx-scrollbar/-/ngx-scrollbar-18.0.0.tgz"
   integrity sha512-+ykmY491x+nzXvnecJvZHvDz0YWuX1r7SYMxNG4RVHXm5Z68P/8kd/3ryLD6DXdNWmJawd4NGvqq2ZkUKb/g3A==
@@ -5007,6 +5016,11 @@ path-to-regexp@0.1.12:
   resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.12.tgz"
   integrity sha512-RA1GjUVMnvYFxuqovrEqZoxxW5NUZqbwKtYz/Tt7nXerk0LbLblQmrsgdeOxV5SFHf0UDggjS/bSeOZwt1pmEQ==
 
+perfect-scrollbar@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmjs.org/perfect-scrollbar/-/perfect-scrollbar-1.5.0.tgz"
+  integrity sha512-NrNHJn5mUGupSiheBTy6x+6SXCFbLlm8fVZh9moIzw/LgqElN5q4ncR4pbCBCYuCJ8Kcl9mYM0NgDxvW+b4LxA==
+
 picocolors@^1.0.0, picocolors@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz"
@@ -5282,6 +5296,11 @@ requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz"
   integrity sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==
+
+resize-observer-polyfill@^1.5.0:
+  version "1.5.1"
+  resolved "https://registry.npmjs.org/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz"
+  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
 
 resolve-from@^4.0.0:
   version "4.0.0"

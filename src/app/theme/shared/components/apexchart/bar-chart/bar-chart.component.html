@@ -2,26 +2,28 @@
   <div class="card-body">
     <div class="row mb-3 align-items-center">
       <div class="col">
-        <div class="text-sm">Total Growth</div>
-        <h3 class="mt-2 f-w-600">$2,324.00</h3>
+        <div class="text-sm">Month Wise Expiration</div>
+        <h3 class="mt-2 f-w-600"> Current Month : 10 Items</h3>
       </div>
-      <div class="col-auto">
+      <!-- <div class="col-auto">
         <select class="form-select p-r-35" title="Select">
           <option>Today</option>
           <option selected>Month</option>
           <option>Year</option>
         </select>
-      </div>
+      </div> -->
     </div>
     <apx-chart
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [dataLabels]="chartOptions.dataLabels"
-      [plotOptions]="chartOptions.plotOptions"
-      [responsive]="chartOptions.responsive"
-      [xaxis]="chartOptions.xaxis"
-      [colors]="chartOptions.colors"
-      [tooltip]="chartOptions.tooltip"
-    ></apx-chart>
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [dataLabels]="chartOptions.dataLabels"
+    [plotOptions]="chartOptions.plotOptions"
+    [yaxis]="chartOptions.yaxis"
+    [legend]="chartOptions.legend"
+    [fill]="chartOptions.fill"
+    [stroke]="chartOptions.stroke"
+    [tooltip]="chartOptions.tooltip"
+    [xaxis]="chartOptions.xaxis"
+  ></apx-chart>
   </div>
 </div>

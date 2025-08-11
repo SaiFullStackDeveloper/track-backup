@@ -10,7 +10,8 @@ import { CardComponent } from './components/card/card.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 
 // bootstrap import
-import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule } from '@
     NgbNavModule,
     NgbModule,
     NgbCollapseModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    NgbDatepickerModule
   ],
   exports: [
     CommonModule,

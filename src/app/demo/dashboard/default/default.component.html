@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xl-4 col-md-6">
-    <div class="card earning-card bg-secondary-dark text-white overflow-hidden">
+    <div class="card earning-card bg-warning text-white overflow-hidden">
       <span class="round secondary-round small"></span>
       <span class="round secondary-round big"></span>
       <div class="card-body">
@@ -11,27 +11,20 @@
             </div>
           </div>
           <div class="col-auto">
-            <div class="btn-group" ngbDropdown>
-              <a type="button" class="avatar avatar-xs bg-secondary dropdown-toggle arrow-none" ngbDropdownToggle>
-                <i class="ti ti-dots"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                <li><button class="dropdown-item" type="button">Import Card</button></li>
-                <li><button class="dropdown-item" type="button">Export</button></li>
-              </ul>
-            </div>
           </div>
         </div>
         <span class="text-white d-block f-34 f-w-500 my-2">
            10 Items
-          <i class="ti ti-circle-arrow-up-right opacity-50"></i>
+          <i class="ti ti-circle-arrow-up-right opacity-50" (click)="openItemModal()" style="cursor: pointer;"></i>
+          <!-- <button class="btn btn-primary mb-3" (click)="openItemModal()">Show Item Table</button> -->
+
         </span>
         <p class="mb-0 opacity-50">Near By Expiry Date</p>
       </div>
     </div>
   </div>
   <div class="col-xl-4 col-md-6">
-    <div class="card earning-card bg-primary-dark text-white overflow-hidden">
+    <div class="card earning-card bg-danger text-white overflow-hidden">
       <span class="round primary-round small"></span>
       <span class="round primary-round big"></span>
       <div class="card-body">
@@ -39,31 +32,25 @@
       </div>
     </div>
   </div>
-  <div class="col-xl-4 col-md-12">
-    <div class="card total-income-card overflow-hidden bg-primary-dark text-white">
+  <div class="col-xl-4 col-md-6">
+    <div class="card earning-card  bg-primary-dark text-white overflow-hidden">
+      <span class="round secondary-round small"></span>
+      <span class="round secondary-round big"></span>
       <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-lg icon m-r-5">
-            <i class="text-white ti ti-layout-board-split f-24"></i>
+        <div class="row">
+          <div class="col">
+            <div class="avatar avatar-lg">
+              <i class="text-white ti ti-credit-card f-24"></i>
+            </div>
           </div>
-          <div class="ms-2">
-            <h4 class="text-white f-w-600 mb-1">110 Items</h4>
-            <p class="mb-0 opacity-50 text-sm">Total Records</p>
+          <div class="col-auto">
           </div>
         </div>
-      </div>
-    </div>
-    <div class="card total-income-card warning overflow-hidden">
-      <div class="card-body">
-        <div class="d-flex align-items-center">
-          <div class="avatar avatar-lg icon-warning m-r-5">
-            <i class="text-warning ti ti-layout-board-split f-24"></i>
-          </div>
-          <div class="ms-2">
-            <h4 class="f-w-600 mb-1">$203k</h4>
-            <p class="mb-0 opacity-50 text-sm">Total Income</p>
-          </div>
-        </div>
+        <span class="text-white d-block f-34 f-w-500 my-2">
+           100 Items
+          <i class="ti ti-circle-arrow-up-right opacity-50"></i>
+        </span>
+        <p class="mb-0 opacity-50">Total Records</p>
       </div>
     </div>
   </div>
@@ -123,4 +110,126 @@
       </div>
     </div>
   </div>
+
+  <div class="col-xl-12 col-md-12">
+    <div class="col-md-12">
+      <app-card
+        cardTitle="Inventory Expiry Report"
+        cardClass="table-card bg-white text-dark"
+        blockClass="p-0"
+      >
+        <div class="p-0" style="background-color: white; color: black;">
+          <ng-scrollbar [style.max-height]="'362px'">
+            <table
+              class="table table-bordered table-hover table-striped mb-0"
+              style="background-color: white; color: black;"
+            >
+              <thead class="table-light">
+                <tr>
+                  <th><span>Category</span></th>
+                  <th><span>Item Name</span></th>
+                  <th><span>Expiry Date</span></th>
+                  <th><span>Department</span></th>
+                  <th><span>Action</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of expiryItems; let i = index">
+                  <td>{{ item.category }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>
+                    <!-- If not editing, show date -->
+                    <ng-container *ngIf="editingIndex !== i; else datepicker">
+                      {{ toDate(item.expiryDate) | date: 'yyyy-MM-dd' }}
+                    </ng-container>
+              
+                    <!-- If editing, show the datepicker -->
+                    <ng-template #datepicker>
+                      <ngb-datepicker
+                        [(ngModel)]="item.expiryDate"
+                        (select)="saveDate(i)"
+                        [displayMonths]="1"
+                        [navigation]="'select'"
+                        outsideDays="collapsed"
+                      ></ngb-datepicker>
+                    </ng-template>
+                  </td>
+                  <td>{{ item.department }}</td>
+                  <td>
+                    <button
+                      class="btn btn-sm"
+                      [ngClass]="editingIndex === i ? 'btn-success' : 'btn-outline-warning'"
+                      (click)="toggleDatepicker(i)"
+                    >
+                      {{ editingIndex === i ? 'Save' : 'Update' }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              
+            </table>
+          </ng-scrollbar>
+        </div>
+      </app-card>
+    </div>
+  </div>
+
+
+<!-- Modal Template -->
+<ng-template #itemTableModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">List of Nearby Expiry Date</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <table
+    class="table table-bordered table-hover table-striped mb-0"
+    style="background-color: white; color: black;"
+  >
+    <thead class="table-light">
+      <tr>
+        <th><span>Category</span></th>
+        <th><span>Item Name</span></th>
+        <th><span>Expiry Date</span></th>
+        <th><span>Department</span></th>
+        <th><span>Action</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of expiryItems; let i = index">
+        <td>{{ item.category }}</td>
+        <td>{{ item.name }}</td>
+        <td>
+          <!-- If not editing, show date -->
+          <ng-container *ngIf="editingIndex !== i; else datepicker">
+            {{ toDate(item.expiryDate) | date: 'yyyy-MM-dd' }}
+          </ng-container>
+    
+          <!-- If editing, show the datepicker -->
+          <ng-template #datepicker>
+            <ngb-datepicker
+              [(ngModel)]="item.expiryDate"
+              (select)="saveDate(i)"
+              [displayMonths]="1"
+              [navigation]="'select'"
+              outsideDays="collapsed"
+            ></ngb-datepicker>
+          </ng-template>
+        </td>
+        <td>{{ item.department }}</td>
+        <td>
+          <button
+            class="btn btn-sm"
+            [ngClass]="editingIndex === i ? 'btn-success' : 'btn-outline-warning'"
+            (click)="toggleDatepicker(i)"
+          >
+            {{ editingIndex === i ? 'Save' : 'Update' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    
+  </table>
+  </div>
+</ng-template>
 </div>
