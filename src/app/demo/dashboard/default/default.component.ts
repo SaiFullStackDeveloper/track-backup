@@ -6,6 +6,7 @@ import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { BarChartComponent } from 'src/app/theme/shared/components/apexchart/bar-chart/bar-chart.component';
 import { ChartDataMonthComponent } from 'src/app/theme/shared/components/apexchart/chart-data-month/chart-data-month.component';
 import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import moment from 'moment';
 
 @Component({
   selector: 'app-default',
@@ -225,4 +226,13 @@ export class DefaultComponent {
       this.filteredItems = [...this.expiryItems];
     }
   }
+
+  selectedDateRange: {startDate: moment.Moment, endDate: moment.Moment} | null = null;
+
+onDateRangeChange(event: any) {
+  console.log('Selected range:', event);
+  // event.startDate and event.endDate are moment.js objects
+  // Use them to filter your table
+}
+
 }

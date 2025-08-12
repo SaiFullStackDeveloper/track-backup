@@ -12,6 +12,7 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 // bootstrap import
 import { NgbDropdownModule, NgbNavModule, NgbModule, NgbCollapseModule, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
     NgbModule,
     NgbCollapseModule,
     NgScrollbarModule,
-    NgbDatepickerModule
+    NgbDatepickerModule,
+    NgxDaterangepickerMd.forRoot()
   ],
   exports: [
     CommonModule,

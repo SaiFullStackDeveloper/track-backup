@@ -224,6 +224,15 @@
     </div>
   </div>
 
+  <input
+  type="text"
+  ngxDaterangepickerMd
+  [(ngModel)]="selectedDateRange"
+  (choosedDate)="onDateRangeChange($event)"
+  placeholder="Select date range"
+/>
+
+
 <!-- Modal Template -->
 <ng-template #itemTableModal let-modal>
   <div class="modal-header">
