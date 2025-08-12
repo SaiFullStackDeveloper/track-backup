@@ -9,7 +9,7 @@ import { NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-default',
-  imports: [ BarChartComponent, ChartDataMonthComponent, SharedModule],
+  imports: [BarChartComponent, ChartDataMonthComponent, SharedModule],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
 })
@@ -17,8 +17,8 @@ export class DefaultComponent {
   // public method
   @ViewChild('datepickerElem') datepickerElem!: ElementRef;
   @ViewChild('itemTableModal') itemTableModal: any;
-  constructor(private modalService: NgbModal) {}
-  openItemModal () {
+  constructor(private modalService: NgbModal) { }
+  openItemModal() {
     this.modalService.open(this.itemTableModal, { size: 'lg' }); // optional size
   }
   ListGroup = [
@@ -44,7 +44,7 @@ export class DefaultComponent {
       invest: '01-08-2025',
       bgColor: 'bg-light-danger',
       icon: 'ti ti-chevron-up',
-      color:  'text-danger'
+      color: 'text-danger'
     },
     {
       name: 'Travel Insurance',
@@ -60,11 +60,11 @@ export class DefaultComponent {
       invest: '20-07-2025',
       bgColor: 'bg-light-danger',
       icon: 'ti ti-chevron-up',
-      color:  'text-danger',
+      color: 'text-danger',
       space: 'pb-0'
     }
   ];
-  
+
 
   profileCards = [
     {
@@ -112,42 +112,42 @@ export class DefaultComponent {
       name: 'Paracetamol 500mg',
       expiryDate: this.toDateStruct('2025-07-15'),
       department: 'Pharmacy',
-          editing: false,
+      editing: false,
     },
     {
       category: 'Food',
       name: 'Instant Noodles',
       expiryDate: this.toDateStruct('2025-06-30'),
       department: 'Kitchen',
-          editing: false,
+      editing: false,
     },
     {
       category: 'Equipment',
       name: 'Oxygen Cylinder',
       expiryDate: this.toDateStruct('2025-08-01'),
       department: 'Emergency',
-          editing: false,
+      editing: false,
     },
     {
       category: 'Stationery',
       name: 'Printer Cartridge',
       expiryDate: this.toDateStruct('2025-05-20'),
       department: 'Admin',
-          editing: false,
+      editing: false,
     },
     {
       category: 'Medical',
       name: 'Insulin Pen',
       expiryDate: this.toDateStruct('2025-06-10'),
       department: 'Pharmacy',
-          editing: false,
+      editing: false,
     },
     {
       category: 'Food',
       name: 'Milk Pack',
       expiryDate: this.toDateStruct('2025-08-05'),
       department: 'Cafeteria',
-          editing: false,
+      editing: false,
     }
   ];
 
@@ -174,14 +174,8 @@ export class DefaultComponent {
   }
 
 
-  
-  selectedIndex: number | null = null;
 
-  // onDateChange(date: NgbDateStruct, index: number) {
-  //   this.expiryItems[index].expiryDate = date;
-  //   this.expiryItems[index].editing = false;
-  //   this.selectedIndex = null;
-  // }
+  selectedIndex: number | null = null;
 
   toggleDatePicker(index: number) {
     this.selectedIndex = this.selectedIndex === index ? null : index;
@@ -199,5 +193,36 @@ export class DefaultComponent {
     const [year, month, day] = dateString.split('-').map(Number);
     const dateStruct: NgbDateStruct = { year, month, day };
     // use dateStruct
+  }
+
+
+  // pagination
+
+  page = 1;
+  pageSize = 5;
+  filterDate: NgbDateStruct | null = null;
+
+  filteredItems = [...this.expiryItems];
+  fromDate: NgbDateStruct | null = null;
+  toDateField: NgbDateStruct | null = null;
+  // Converts NgbDateStruct to Date
+  ngbToDate(date: NgbDateStruct): Date {
+    return new Date(date.year, date.month - 1, date.day);
+  }
+
+  filterTable() {
+    if (this.fromDate && this.toDate) {
+      const from = this.ngbToDate(this.fromDate);
+      const to = this.ngbToDate(this.toDateField);
+      console.log('from and to-->', from, to)
+
+      this.filteredItems = this.expiryItems.filter(item => {
+        console.log("item expirey date --->", item.expiryDate)
+        const itemDate = this.ngbToDate(item.expiryDate);
+        return itemDate >= from && itemDate <= to;
+      });
+    } else {
+      this.filteredItems = [...this.expiryItems];
+    }
   }
 }

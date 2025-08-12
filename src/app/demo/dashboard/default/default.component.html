@@ -114,36 +114,84 @@
   <div class="col-xl-12 col-md-12">
     <div class="col-md-12">
       <app-card
-        cardTitle="Inventory Expiry Report"
-        cardClass="table-card bg-white text-dark"
-        blockClass="p-0"
-      >
-        <div class="p-0" style="background-color: white; color: black;">
+      cardClass="table-card bg-white text-dark"
+      blockClass="p-0"
+    >
+      <!-- Header with flex layout -->
+      <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+        <!-- Left: Title -->
+        <h5 class="mb-0">Inventory Expiry Report</h5>
+    
+        <!-- Middle: Date Filters -->
+        <div class="d-flex gap-3">
+          <!-- From Date -->
+          <div>
+            <label for="fromDate" class="form-label mb-1">From Date</label>
+            <div class="input-group">
+              <input
+                id="fromDate"
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                name="fromDate"
+                ngbDatepicker
+                #fromDp="ngbDatepicker"
+                [(ngModel)]="fromDate"
+                (dateSelect)="filterTable()"
+                (click)="fromDp.toggle()"
+              />
+              <button class="btn btn-outline-secondary" (click)="fromDp.toggle()" type="button">
+                <i class="bi bi-calendar"></i>
+              </button>
+            </div>
+          </div>
+    
+          <!-- To Date -->
+          <div>
+            <label for="toDateField" class="form-label mb-1">To Date</label>
+            <div class="input-group">
+              <input
+                id="toDateField"
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                name="toDate"
+                ngbDatepicker
+                #toDp="ngbDatepicker"
+                [(ngModel)]="toDateField"
+                (dateSelect)="filterTable()"
+                (click)="toDp.toggle()"
+              />
+              <button class="btn btn-outline-secondary" (click)="toDp.toggle()" type="button">
+                <i class="bi bi-calendar"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+    
+        <!-- Right: Submit Button -->
+        <div>
+          <button class="btn btn-primary" (click)="filterTable()">Submit</button>
+        </div>
+      </div>
+          <!-- Table with Scroll -->
           <ng-scrollbar [style.max-height]="'362px'">
-            <table
-              class="table table-bordered table-hover table-striped mb-0"
-              style="background-color: white; color: black;"
-            >
+            <table class="table table-bordered table-hover table-striped mb-0">
               <thead class="table-light">
                 <tr>
-                  <th><span>Category</span></th>
-                  <th><span>Item Name</span></th>
-                  <th><span>Expiry Date</span></th>
-                  <th><span>Department</span></th>
-                  <th><span>Action</span></th>
+                  <th>Category</th>
+                  <th>Item Name</th>
+                  <th>Expiry Date</th>
+                  <th>Department</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of expiryItems; let i = index">
+                <tr *ngFor="let item of filteredItems; let i = index">
                   <td>{{ item.category }}</td>
                   <td>{{ item.name }}</td>
                   <td>
-                    <!-- If not editing, show date -->
                     <ng-container *ngIf="editingIndex !== i; else datepicker">
                       {{ toDate(item.expiryDate) | date: 'yyyy-MM-dd' }}
                     </ng-container>
-              
-                    <!-- If editing, show the datepicker -->
                     <ng-template #datepicker>
                       <ngb-datepicker
                         [(ngModel)]="item.expiryDate"
@@ -166,14 +214,15 @@
                   </td>
                 </tr>
               </tbody>
-              
             </table>
           </ng-scrollbar>
-        </div>
+  
+          <!-- Pagination -->
+          
+        <!-- </div> -->
       </app-card>
     </div>
   </div>
-
 
 <!-- Modal Template -->
 <ng-template #itemTableModal let-modal>
