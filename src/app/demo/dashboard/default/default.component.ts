@@ -18,6 +18,7 @@ export class DefaultComponent {
   // public method
   @ViewChild('datepickerElem') datepickerElem!: ElementRef;
   @ViewChild('itemTableModal') itemTableModal!: ElementRef;
+  @ViewChild('expiredItemsModal') expiredItemsModal!: ElementRef;
   // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(private modalService: NgbModal) { }
   openItemModal() {
@@ -224,6 +225,11 @@ export class DefaultComponent {
   modalDisplayCount = 5; // Start with 5 items in modal
   isModalLoading = false; // Loading state for modal
 
+  // Expired items modal variables
+  expiredDisplayItems: { category: string; name: string; expiryDate: NgbDateStruct; department: string; editing: boolean }[] = []; // Expired items displayed in modal
+  expiredDisplayCount = 5; // Start with 5 expired items in modal
+  isExpiredModalLoading = false; // Loading state for expired modal
+
   // All items (expanded to 25 items for demo)
   allExpiryItems = [
     {
@@ -404,6 +410,80 @@ export class DefaultComponent {
     }
   ];
 
+  // Expired items data (items that are already expired)
+  expiredItems = [
+    {
+      category: 'Medicine',
+      name: 'Expired Antibiotics',
+      expiryDate: this.toDateStruct('2025-05-15'),
+      department: 'Pharmacy',
+      editing: false,
+    },
+    {
+      category: 'Food',
+      name: 'Expired Milk Cartons',
+      expiryDate: this.toDateStruct('2025-04-20'),
+      department: 'Kitchen',
+      editing: false,
+    },
+    {
+      category: 'Medical',
+      name: 'Expired Syringes',
+      expiryDate: this.toDateStruct('2025-03-10'),
+      department: 'Emergency',
+      editing: false,
+    },
+    {
+      category: 'Equipment',
+      name: 'Expired Batteries',
+      expiryDate: this.toDateStruct('2025-02-28'),
+      department: 'IT',
+      editing: false,
+    },
+    {
+      category: 'Food',
+      name: 'Expired Bread',
+      expiryDate: this.toDateStruct('2025-01-15'),
+      department: 'Cafeteria',
+      editing: false,
+    },
+    {
+      category: 'Chemical',
+      name: 'Expired Cleaning Agents',
+      expiryDate: this.toDateStruct('2024-12-20'),
+      department: 'Maintenance',
+      editing: false,
+    },
+    {
+      category: 'Medicine',
+      name: 'Expired Pain Relievers',
+      expiryDate: this.toDateStruct('2024-11-30'),
+      department: 'Pharmacy',
+      editing: false,
+    },
+    {
+      category: 'Food',
+      name: 'Expired Canned Goods',
+      expiryDate: this.toDateStruct('2024-10-25'),
+      department: 'Storage',
+      editing: false,
+    },
+    {
+      category: 'Medical',
+      name: 'Expired Masks',
+      expiryDate: this.toDateStruct('2024-09-15'),
+      department: 'Emergency',
+      editing: false,
+    },
+    {
+      category: 'Equipment',
+      name: 'Expired Fire Extinguisher',
+      expiryDate: this.toDateStruct('2024-08-10'),
+      department: 'Safety',
+      editing: false,
+    }
+  ];
+
   filteredItems = this.allExpiryItems.slice(0, this.initialDisplayCount); // Initially show only 5
   fromDate: NgbDateStruct | null = null;
   toDateField: NgbDateStruct | null = null;
@@ -554,6 +634,97 @@ onDateRangeChange(event: {startDate: moment.Moment, endDate: moment.Moment}) {
   console.log('Selected range:', event);
   // event.startDate and event.endDate are moment.js objects
   // Use them to filter your table
+}
+
+// Expired items modal methods
+openExpiredModal() {
+  // Initialize expired modal with first 5 items
+  this.expiredDisplayItems = this.expiredItems.slice(0, this.expiredDisplayCount);
+  this.expiredDisplayCount = 5;
+  this.isExpiredModalLoading = false;
+  
+  console.log('Opening expired modal with items:', this.expiredDisplayItems.length);
+  console.log('Total available expired items:', this.expiredItems.length);
+  
+  this.modalService.open(this.expiredItemsModal, { size: 'lg' });
+}
+
+// Load more expired items method for modal
+loadMoreExpiredItems() {
+  if (this.isExpiredModalLoading) return; // Prevent multiple simultaneous loads
+  if (this.expiredDisplayItems.length >= this.expiredItems.length) {
+    console.log('All expired items already loaded in modal');
+    return; // All items already loaded
+  }
+  
+  console.log('Starting to load more expired modal items...');
+  this.isExpiredModalLoading = true;
+  
+  // Simulate loading delay
+  setTimeout(() => {
+    const currentLength = this.expiredDisplayItems.length;
+    const nextBatch = this.expiredItems.slice(currentLength, currentLength + 5);
+    
+    console.log('Expired Modal - Current length:', currentLength, 'Next batch size:', nextBatch.length, 'Total available:', this.expiredItems.length);
+    
+    if (nextBatch.length > 0) {
+      this.expiredDisplayItems = [...this.expiredDisplayItems, ...nextBatch];
+      this.expiredDisplayCount = this.expiredDisplayItems.length;
+      console.log('New total expired modal items displayed:', this.expiredDisplayItems.length);
+    }
+    
+    this.isExpiredModalLoading = false;
+    
+    // Log final state
+    if (this.expiredDisplayItems.length >= this.expiredItems.length) {
+      console.log('All expired modal items loaded!');
+    }
+  }, 300);
+}
+
+// Handle expired modal scroll events
+onExpiredModalScroll(event: Event) {
+  const element = event.target as HTMLElement;
+  const threshold = 50; // pixels from bottom to trigger load
+  
+  console.log('Expired modal scroll event:', {
+    scrollTop: element.scrollTop,
+    clientHeight: element.clientHeight,
+    scrollHeight: element.scrollHeight,
+    threshold: element.scrollHeight - threshold,
+    currentItems: this.expiredDisplayItems.length,
+    totalItems: this.expiredItems.length,
+    allLoaded: this.expiredDisplayItems.length >= this.expiredItems.length
+  });
+  
+  // Don't trigger loading if all items are already loaded
+  if (this.expiredDisplayItems.length >= this.expiredItems.length) {
+    console.log('All expired modal items already loaded, skipping scroll trigger');
+    return;
+  }
+  
+  if (element.scrollTop + element.clientHeight >= element.scrollHeight - threshold) {
+    console.log('Expired modal scroll threshold reached, loading more items...');
+    this.loadMoreExpiredItems();
+  }
+}
+
+// Delete expired item
+deleteExpiredItem(index: number) {
+  if (confirm('Are you sure you want to delete this expired item?')) {
+    // Remove from display items
+    this.expiredDisplayItems.splice(index, 1);
+    
+    // Also remove from the main expired items array
+    const globalIndex = this.expiredItems.findIndex(item => 
+      item.name === this.expiredDisplayItems[index]?.name
+    );
+    if (globalIndex > -1) {
+      this.expiredItems.splice(globalIndex, 1);
+    }
+    
+    console.log('Deleted expired item. Remaining items:', this.expiredDisplayItems.length);
+  }
 }
 
 }
