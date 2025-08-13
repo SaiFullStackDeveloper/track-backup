@@ -4,7 +4,12 @@
     <!-- First row of cards -->
     <div class="row mb-3">
       <div class="col-xl-6 col-md-6">
-        <div class="card earning-card text-dark overflow-hidden" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-left: 4px solid #f39c12;">
+        <div class="card earning-card text-dark overflow-hidden" 
+             style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-left: 4px solid #f39c12; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;" 
+             (click)="openItemModal()" 
+             title="Click to view details"
+             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
           <span class="round secondary-round small"></span>
           <span class="round secondary-round big"></span>
           <div class="card-body py-3">
@@ -16,7 +21,7 @@
                     <small class="text-muted fw-semibold" style="font-size: 13px; letter-spacing: 0.5px;">NEAR BY EXPIRY DATE</small>
                   </div>
                   <div class="ms-auto">
-                    <span class="text-warning fw-bold" style="cursor: pointer; font-size: 14px; text-decoration: underline;" (click)="openItemModal()" title="View Details">VIEW →</span>
+                    <span class="text-warning fw-bold" style="font-size: 14px; text-decoration: underline;">VIEW →</span>
                   </div>
                 </div>
               </div>
@@ -289,60 +294,129 @@
 </div>
 
 
-<!-- Modal Template -->
+<!-- Enhanced Modal Template -->
 <ng-template #itemTableModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">List of Nearby Expiry Date</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  <div class="modal-header modal-header-enhanced">
+    <div class="modal-title-container">
+      <i class="ti ti-calendar-exclamation modal-icon"></i>
+      <h5 class="modal-title">Items Expiring Soon</h5>
+    </div>
+    <button type="button" class="btn-close modal-close-btn" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <i class="ti ti-x" style="color: white; font-size: 18px; font-weight: bold;"></i>
+    </button>
   </div>
-  <div class="modal-body">
-    <table
-    class="table table-bordered table-hover table-striped mb-0"
-    style="background-color: white; color: black;"
-  >
-    <thead class="table-light">
-      <tr>
-        <th><span>Category</span></th>
-        <th><span>Item Name</span></th>
-        <th><span>Expiry Date</span></th>
-        <th><span>Department</span></th>
-        <th><span>Action</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of expiryItems; let i = index">
-        <td>{{ item.category }}</td>
-        <td>{{ item.name }}</td>
-        <td>
-          <!-- If not editing, show date -->
-          <ng-container *ngIf="editingIndex !== i; else datepicker">
-            {{ toDate(item.expiryDate) | date: 'yyyy-MM-dd' }}
-          </ng-container>
-    
-          <!-- If editing, show the datepicker -->
-          <ng-template #datepicker>
-            <ngb-datepicker
-              [(ngModel)]="item.expiryDate"
-              (select)="saveDate()"
-              [displayMonths]="1"
-              [navigation]="'select'"
-              outsideDays="collapsed"
-            ></ngb-datepicker>
-          </ng-template>
-        </td>
-        <td>{{ item.department }}</td>
-        <td>
-          <button
-            class="btn btn-sm"
-            [ngClass]="editingIndex === i ? 'btn-success' : 'btn-outline-warning'"
-            (click)="toggleDatepicker(i)"
-          >
-            {{ editingIndex === i ? 'Save' : 'Renew' }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-    
-  </table>
+  <div class="modal-body modal-body-enhanced">
+    <div class="table-container">
+      <!-- Scrollable container for the table -->
+      <div class="modal-scrollable-container" 
+           style="max-height: 300px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 0.375rem;" 
+           (scroll)="onModalScroll($event)">
+        <table class="table modal-table mb-0">
+          <thead class="modal-table-header">
+            <tr>
+              <th class="col-item">
+                <i class="ti ti-package me-2"></i>
+                <span>Item Name</span>
+              </th>
+              <th class="col-category">
+                <i class="ti ti-category-2 me-2"></i>
+                <span>Category</span>
+              </th>
+              <th class="col-expiry">
+                <i class="ti ti-calendar me-2"></i>
+                <span>Expiry Date</span>
+              </th>
+              <th class="col-department">
+                <i class="ti ti-building me-2"></i>
+                <span>Department</span>
+              </th>
+              <th class="col-action">
+                <i class="ti ti-settings me-2"></i>
+                <span>Action</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="modal-table-body">
+            <tr *ngFor="let item of modalDisplayItems; let i = index" class="modal-table-row">
+              <td class="item-cell">
+                <div class="item-info">
+                  <span class="item-name">{{ item.name }}</span>
+                </div>
+              </td>
+              <td class="category-cell">
+                <span class="category-badge">{{ item.category }}</span>
+              </td>
+              <td class="expiry-cell">
+                <!-- If not editing, show date -->
+                <ng-container *ngIf="editingIndex !== i; else datepicker">
+                  <div class="date-display">
+                    <i class="ti ti-calendar-time me-2 text-muted"></i>
+                    <span class="date-text">{{ toDate(item.expiryDate) | date: 'yyyy-MM-dd' }}</span>
+                  </div>
+                </ng-container>
+          
+                <!-- If editing, show the datepicker -->
+                <ng-template #datepicker>
+                  <div class="datepicker-container">
+                    <ngb-datepicker
+                      [(ngModel)]="item.expiryDate"
+                      (select)="saveDate()"
+                      [displayMonths]="1"
+                      [navigation]="'select'"
+                      outsideDays="collapsed"
+                    ></ngb-datepicker>
+                  </div>
+                </ng-template>
+              </td>
+              <td class="department-cell">
+                <div class="department-info">
+                  <i class="ti ti-building me-2 text-muted"></i>
+                  <span class="department-name">{{ item.department }}</span>
+                </div>
+              </td>
+              <td class="action-cell">
+                <button
+                  class="btn btn-sm modal-action-btn"
+                  [ngClass]="editingIndex === i ? 'btn-success' : 'btn-primary'"
+                  (click)="toggleDatepicker(i)"
+                >
+                  <i class="me-2" [ngClass]="editingIndex === i ? 'ti ti-device-floppy' : 'ti ti-refresh'"></i>
+                  {{ editingIndex === i ? 'Save' : 'Renew' }}
+                </button>
+              </td>
+            </tr>
+            <!-- Loading indicator for modal -->
+            <tr *ngIf="isModalLoading">
+              <td colspan="5" class="border-0 text-center py-4">
+                <div class="d-flex align-items-center justify-content-center">
+                  <div class="spinner-border spinner-border-sm text-primary me-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <span class="text-muted fw-semibold" style="font-size: 14px;">Loading more items...</span>
+                </div>
+              </td>
+            </tr>
+            <!-- End of data indicator for modal -->
+            <tr *ngIf="!isModalLoading && modalDisplayItems.length >= allExpiryItems.length">
+              <td colspan="5" class="border-0 text-center py-3" style="background-color: #f8f9fa;">
+                <div class="d-flex align-items-center justify-content-center">
+                  <span class="text-success fw-semibold" style="font-size: 14px;">✓ All items loaded successfully</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Modal footer with item count -->
+      <div class="modal-footer-info">
+        <div class="d-flex align-items-center justify-content-start">
+          <small class="text-muted fw-semibold" style="font-size: 13px;">
+            Showing <span class="text-primary fw-bold">{{ modalDisplayItems.length }}</span> of 
+            <span class="text-primary fw-bold">{{ allExpiryItems.length }}</span> items
+          </small>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>

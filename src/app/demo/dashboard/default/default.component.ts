@@ -21,6 +21,15 @@ export class DefaultComponent {
   // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(private modalService: NgbModal) { }
   openItemModal() {
+    // Initialize modal with first 5 items
+    this.modalDisplayItems = this.allExpiryItems.slice(0, this.modalDisplayCount);
+    this.modalDisplayCount = 5;
+    this.isModalLoading = false;
+    
+    console.log('Opening modal with items:', this.modalDisplayItems.length);
+    console.log('Total available items:', this.allExpiryItems.length);
+    console.log('Modal display items:', this.modalDisplayItems);
+    
     this.modalService.open(this.itemTableModal, { size: 'lg' }); // optional size
   }
   ListGroup = [
@@ -209,6 +218,11 @@ export class DefaultComponent {
   currentDisplayCount = 5; // Current number of items being displayed
   isLoading = false; // Loading state for infinite scroll
   filterDate: NgbDateStruct | null = null;
+
+  // Modal-specific variables for infinite scroll
+  modalDisplayItems: { category: string; name: string; expiryDate: NgbDateStruct; department: string; editing: boolean }[] = []; // Items displayed in modal
+  modalDisplayCount = 5; // Start with 5 items in modal
+  isModalLoading = false; // Loading state for modal
 
   // All items (expanded to 25 items for demo)
   allExpiryItems = [
@@ -444,6 +458,66 @@ export class DefaultComponent {
       
       this.isLoading = false;
     }, 300); // Reduced to 300ms for faster response
+  }
+
+  // Load more items method for modal
+  loadMoreModalItems() {
+    if (this.isModalLoading) return; // Prevent multiple simultaneous loads
+    if (this.modalDisplayItems.length >= this.allExpiryItems.length) {
+      console.log('All items already loaded in modal');
+      return; // All items already loaded
+    }
+    
+    console.log('Starting to load more modal items...');
+    this.isModalLoading = true;
+    
+    // Simulate loading delay
+    setTimeout(() => {
+      const currentLength = this.modalDisplayItems.length;
+      const nextBatch = this.allExpiryItems.slice(currentLength, currentLength + 5);
+      
+      console.log('Modal - Current length:', currentLength, 'Next batch size:', nextBatch.length, 'Total available:', this.allExpiryItems.length);
+      
+      if (nextBatch.length > 0) {
+        this.modalDisplayItems = [...this.modalDisplayItems, ...nextBatch];
+        this.modalDisplayCount = this.modalDisplayItems.length;
+        console.log('New total modal items displayed:', this.modalDisplayItems.length);
+      }
+      
+      this.isModalLoading = false;
+      
+      // Log final state
+      if (this.modalDisplayItems.length >= this.allExpiryItems.length) {
+        console.log('All modal items loaded!');
+      }
+    }, 300);
+  }
+
+  // Handle modal scroll events
+  onModalScroll(event: Event) {
+    const element = event.target as HTMLElement;
+    const threshold = 50; // pixels from bottom to trigger load
+    
+    console.log('Modal scroll event:', {
+      scrollTop: element.scrollTop,
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+      threshold: element.scrollHeight - threshold,
+      currentItems: this.modalDisplayItems.length,
+      totalItems: this.allExpiryItems.length,
+      allLoaded: this.modalDisplayItems.length >= this.allExpiryItems.length
+    });
+    
+    // Don't trigger loading if all items are already loaded
+    if (this.modalDisplayItems.length >= this.allExpiryItems.length) {
+      console.log('All modal items already loaded, skipping scroll trigger');
+      return;
+    }
+    
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight - threshold) {
+      console.log('Modal scroll threshold reached, loading more items...');
+      this.loadMoreModalItems();
+    }
   }
 
   // Reset items to initial state
