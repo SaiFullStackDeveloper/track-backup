@@ -19,12 +19,14 @@ export class DefaultComponent {
   @ViewChild('datepickerElem') datepickerElem!: ElementRef;
   @ViewChild('itemTableModal') itemTableModal!: ElementRef;
   @ViewChild('expiredItemsModal') expiredItemsModal!: ElementRef;
+  @ViewChild('modalScrollContainer') modalScrollContainer!: ElementRef;
+  @ViewChild('expiredModalScrollContainer') expiredModalScrollContainer!: ElementRef;
   // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(private modalService: NgbModal) { }
   openItemModal() {
-    // Initialize modal with first 5 items
+    // Initialize modal with first 10 items to ensure scrollbar appears
     this.modalDisplayItems = this.allExpiryItems.slice(0, this.modalDisplayCount);
-    this.modalDisplayCount = 5;
+    this.modalDisplayCount = 10;
     this.isModalLoading = false;
     
     console.log('Opening modal with items:', this.modalDisplayItems.length);
@@ -214,20 +216,20 @@ export class DefaultComponent {
   // pagination and infinite scroll
   page = 1;
   pageSize = 5;
-  initialDisplayCount = 5; // Show 5 records initially
+  initialDisplayCount = 10; // Show 10 records initially to ensure scrollbar appears
   loadMoreCount = 5; // Load 5 more when scrolling
-  currentDisplayCount = 5; // Current number of items being displayed
+  currentDisplayCount = 10; // Current number of items being displayed
   isLoading = false; // Loading state for infinite scroll
   filterDate: NgbDateStruct | null = null;
 
   // Modal-specific variables for infinite scroll
   modalDisplayItems: { category: string; name: string; expiryDate: NgbDateStruct; department: string; editing: boolean }[] = []; // Items displayed in modal
-  modalDisplayCount = 5; // Start with 5 items in modal
+  modalDisplayCount = 10; // Start with 10 items in modal to ensure scrollbar appears
   isModalLoading = false; // Loading state for modal
 
   // Expired items modal variables
   expiredDisplayItems: { category: string; name: string; expiryDate: NgbDateStruct; department: string; editing: boolean }[] = []; // Expired items displayed in modal
-  expiredDisplayCount = 5; // Start with 5 expired items in modal
+  expiredDisplayCount = 8; // Start with 8 expired items in modal (we have 10 total)
   isExpiredModalLoading = false; // Loading state for expired modal
 
   // All items (expanded to 25 items for demo)
@@ -484,7 +486,7 @@ export class DefaultComponent {
     }
   ];
 
-  filteredItems = this.allExpiryItems.slice(0, this.initialDisplayCount); // Initially show only 5
+  filteredItems = this.allExpiryItems.slice(0, this.initialDisplayCount); // Initially show 10 items to ensure scrollbar appears
   fromDate: NgbDateStruct | null = null;
   toDateField: NgbDateStruct | null = null;
   // Converts NgbDateStruct to Date
@@ -504,14 +506,32 @@ export class DefaultComponent {
 
   // Alternative scroll method with threshold detection
   onScroll(event: Event) {
-    console.log('Scroll event triggered');
     const element = event.target as HTMLElement;
     const threshold = 50; // Trigger loading when 50px from bottom
     
-    if (element.scrollHeight - element.scrollTop <= element.clientHeight + threshold) {
+    console.log('Table scroll event:', {
+      scrollTop: element.scrollTop,
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+      distanceFromBottom: element.scrollHeight - element.scrollTop - element.clientHeight,
+      threshold: threshold,
+      currentItems: this.filteredItems.length,
+      totalItems: this.allExpiryItems.length
+    });
+    
+    const distanceFromBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
+    
+    if (distanceFromBottom <= threshold) {
       if (!this.isLoading && this.filteredItems.length < this.allExpiryItems.length) {
         console.log('Near bottom, loading more items...');
         this.loadMoreItems();
+      } else {
+        console.log('Not loading because:', {
+          isLoading: this.isLoading,
+          hasMoreItems: this.filteredItems.length < this.allExpiryItems.length,
+          currentCount: this.filteredItems.length,
+          totalCount: this.allExpiryItems.length
+        });
       }
     }
   }
@@ -523,7 +543,7 @@ export class DefaultComponent {
     console.log('Starting to load more items...');
     this.isLoading = true;
     
-    // Simulate loading delay (reduce this in production or remove entirely)
+    // Simulate loading delay (reduced for better UX)
     setTimeout(() => {
       const currentLength = this.filteredItems.length;
       const nextBatch = this.allExpiryItems.slice(currentLength, currentLength + this.loadMoreCount);
@@ -537,7 +557,7 @@ export class DefaultComponent {
       }
       
       this.isLoading = false;
-    }, 300); // Reduced to 300ms for faster response
+    }, 100); // Reduced to 100ms for faster response
   }
 
   // Load more items method for modal
@@ -570,7 +590,7 @@ export class DefaultComponent {
       if (this.modalDisplayItems.length >= this.allExpiryItems.length) {
         console.log('All modal items loaded!');
       }
-    }, 300);
+    }, 100); // Reduced to 100ms for faster response
   }
 
   // Handle modal scroll events
@@ -578,13 +598,17 @@ export class DefaultComponent {
     const element = event.target as HTMLElement;
     const threshold = 50; // pixels from bottom to trigger load
     
+    const distanceFromBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
+    
     console.log('Modal scroll event:', {
       scrollTop: element.scrollTop,
       clientHeight: element.clientHeight,
       scrollHeight: element.scrollHeight,
-      threshold: element.scrollHeight - threshold,
+      distanceFromBottom: distanceFromBottom,
+      threshold: threshold,
       currentItems: this.modalDisplayItems.length,
       totalItems: this.allExpiryItems.length,
+      isLoading: this.isModalLoading,
       allLoaded: this.modalDisplayItems.length >= this.allExpiryItems.length
     });
     
@@ -594,9 +618,13 @@ export class DefaultComponent {
       return;
     }
     
-    if (element.scrollTop + element.clientHeight >= element.scrollHeight - threshold) {
-      console.log('Modal scroll threshold reached, loading more items...');
-      this.loadMoreModalItems();
+    if (distanceFromBottom <= threshold) {
+      if (!this.isModalLoading) {
+        console.log('Modal scroll threshold reached, loading more items...');
+        this.loadMoreModalItems();
+      } else {
+        console.log('Modal already loading, skipping...');
+      }
     }
   }
 
@@ -638,9 +666,9 @@ onDateRangeChange(event: {startDate: moment.Moment, endDate: moment.Moment}) {
 
 // Expired items modal methods
 openExpiredModal() {
-  // Initialize expired modal with first 5 items
+  // Initialize expired modal with first 8 items to ensure scrollbar appears
   this.expiredDisplayItems = this.expiredItems.slice(0, this.expiredDisplayCount);
-  this.expiredDisplayCount = 5;
+  this.expiredDisplayCount = 8;
   this.isExpiredModalLoading = false;
   
   console.log('Opening expired modal with items:', this.expiredDisplayItems.length);
@@ -679,7 +707,7 @@ loadMoreExpiredItems() {
     if (this.expiredDisplayItems.length >= this.expiredItems.length) {
       console.log('All expired modal items loaded!');
     }
-  }, 300);
+      }, 100);
 }
 
 // Handle expired modal scroll events
@@ -687,13 +715,17 @@ onExpiredModalScroll(event: Event) {
   const element = event.target as HTMLElement;
   const threshold = 50; // pixels from bottom to trigger load
   
+  const distanceFromBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
+  
   console.log('Expired modal scroll event:', {
     scrollTop: element.scrollTop,
     clientHeight: element.clientHeight,
     scrollHeight: element.scrollHeight,
-    threshold: element.scrollHeight - threshold,
+    distanceFromBottom: distanceFromBottom,
+    threshold: threshold,
     currentItems: this.expiredDisplayItems.length,
     totalItems: this.expiredItems.length,
+    isLoading: this.isExpiredModalLoading,
     allLoaded: this.expiredDisplayItems.length >= this.expiredItems.length
   });
   
@@ -703,9 +735,13 @@ onExpiredModalScroll(event: Event) {
     return;
   }
   
-  if (element.scrollTop + element.clientHeight >= element.scrollHeight - threshold) {
-    console.log('Expired modal scroll threshold reached, loading more items...');
-    this.loadMoreExpiredItems();
+  if (distanceFromBottom <= threshold) {
+    if (!this.isExpiredModalLoading) {
+      console.log('Expired modal scroll threshold reached, loading more items...');
+      this.loadMoreExpiredItems();
+    } else {
+      console.log('Expired modal already loading, skipping...');
+    }
   }
 }
 
