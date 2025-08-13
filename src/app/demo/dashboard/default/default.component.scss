@@ -1,4 +1,4 @@
-@import "~ngx-daterangepicker-material/daterangepicker";
+// @import "~ngx-daterangepicker-material/daterangepicker";
 
 .nav-tabs {
   border-bottom: none !important;
@@ -34,4 +34,162 @@ table.table {
 :root {
   --bs-body-bg: white;
   --bs-body-color: black;
+}
+
+.card-allignment {
+  height: 95% !important;
+}
+
+// Modern table styling
+.modern-table {
+  thead th {
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    border: none !important;
+  }
+  
+  tbody tr {
+    transition: all 0.2s ease;
+    border: none;
+    
+    &:hover {
+      background-color: rgba(0, 123, 255, 0.03) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    td {
+      border: none !important;
+      vertical-align: middle;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+  }
+}
+
+.table-row-hover {
+  &:hover {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.02) 0%, rgba(0, 123, 255, 0.04) 100%) !important;
+  }
+}
+
+// Custom scrollbar
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-radius: 3px;
+    
+    &:hover {
+      background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    }
+  }
+}
+
+// Badge styling enhancements
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+// Button enhancements
+.btn {
+  transition: all 0.2s ease;
+  font-weight: 500;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Recently Added Items styling
+.list-group-item:last-child {
+  border-bottom: none !important;
+}
+
+// ApexCharts menu icon alignment
+::ng-deep {
+  // Toolbar styling - position this first
+  .apexcharts-toolbar {
+    position: absolute !important;
+    right: 15px !important;
+    top: -45px !important; // Move up to align with the heading
+    z-index: 10 !important;
+  }
+
+  .apexcharts-menu-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    
+    svg {
+      width: 20px !important;
+      height: 20px !important;
+      fill: #495057 !important;
+    }
+    
+    &:hover {
+      background-color: rgba(0, 123, 255, 0.1) !important;
+      border-radius: 6px !important;
+      transform: scale(1.05) !important;
+    }
+  }
+  
+  .apexcharts-menu {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+    background: white !important;
+    min-width: 160px !important;
+    padding: 4px 0 !important;
+    
+    .apexcharts-menu-item {
+      padding: 10px 16px !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      color: #495057 !important;
+      transition: all 0.2s ease !important;
+      border: none !important;
+      background: transparent !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba(0, 123, 255, 0.08) 0%, rgba(0, 123, 255, 0.12) 100%) !important;
+        color: #007bff !important;
+        transform: translateX(2px) !important;
+      }
+      
+      &:first-child {
+        border-top-left-radius: 6px !important;
+        border-top-right-radius: 6px !important;
+      }
+      
+      &:last-child {
+        border-bottom-left-radius: 6px !important;
+        border-bottom-right-radius: 6px !important;
+      }
+    }
+  }
+  
+  // Chart container alignment
+  .apexcharts-canvas {
+    margin: 0 auto !important;
+  }
+  
+  // Menu separator (if any)
+  .apexcharts-menu-item + .apexcharts-menu-item {
+    border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+  }
 }
