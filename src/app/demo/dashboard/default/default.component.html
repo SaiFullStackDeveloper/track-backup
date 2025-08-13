@@ -86,12 +86,6 @@
               </div>
             </div>
           </div>
-          <div class="col-auto">
-            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold d-flex align-items-center" style="font-size: 11px;">
-              <i class="ti ti-eye me-1" style="font-size: 12px;"></i>
-              VIEW ALL
-            </button>
-          </div>
         </div>
         <div class="rounded overflow-hidden mb-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 1px solid #dee2e6;">
           <div class="px-3 py-3">
@@ -101,7 +95,7 @@
                 <small class="text-muted fw-bold" style="font-size: 12px; letter-spacing: 0.5px;">ITEM NAME</small>
               </div>
               <div class="col-auto">
-                <small class="text-muted fw-bold" style="font-size: 12px; letter-spacing: 0.5px;">EXPIRY DATE</small>
+                <small class="text-muted fw-bold" style="font-size: 12px; letter-spacing: 0.5px;">ADD-ON</small>
               </div>
             </div>
           </div>
@@ -175,40 +169,40 @@
       </div>
       <div class="card-body p-0">
           <!-- Table with Scroll and Infinite Loading -->
-          <ng-scrollbar [style.max-height]="'320px'" class="custom-scrollbar" (scroll)="onScroll($event)">
+          <ng-scrollbar [style.max-height]="'280px'" class="custom-scrollbar" (scroll)="onScroll($event)">
             <table class="table table-hover mb-0 modern-table">
-              <thead style="background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%); position: sticky; top: 0; z-index: 10;">
+              <thead class="table-header-subtle">
                 <tr>
-                  <th class="border-0 py-3 px-4">
-                    <span class="fw-bold text-dark fs-6" style="color: #2c3e50 !important;">CATEGORY</span>
+                  <th class="border-0 py-2 px-3">
+                    <span class="fw-medium" style="font-size: 12px; letter-spacing: 0.5px; color: #6c757d; text-transform: uppercase;">Item Name</span>
                   </th>
-                  <th class="border-0 py-3 px-4">
-                    <span class="fw-bold text-dark fs-6" style="color: #2c3e50 !important;">ITEM NAME</span>
+                  <th class="border-0 py-2 px-3">
+                    <span class="fw-medium" style="font-size: 12px; letter-spacing: 0.5px; color: #6c757d; text-transform: uppercase;">Category</span>
                   </th>
-                  <th class="border-0 py-3 px-4">
+                  <th class="border-0 py-2 px-3">
                     <div class="d-flex align-items-center">
-                      <i class="ti ti-calendar-event text-warning me-2"></i>
-                      <span class="fw-bold text-dark">Expiry Date</span>
+                      <i class="ti ti-calendar-event me-2" style="font-size: 12px; color: #adb5bd;"></i>
+                      <span class="fw-medium" style="font-size: 12px; color: #6c757d; text-transform: uppercase;">Expiry Date</span>
                     </div>
                   </th>
-                  <th class="border-0 py-3 px-4">
-                    <span class="fw-bold text-dark fs-6" style="color: #2c3e50 !important;">DEPARTMENT</span>
+                  <th class="border-0 py-2 px-3">
+                    <span class="fw-medium" style="font-size: 12px; letter-spacing: 0.5px; color: #6c757d; text-transform: uppercase;">Department</span>
                   </th>
-                  <th class="border-0 py-3 px-4 text-center">
-                    <span class="fw-bold text-dark fs-6" style="color: #2c3e50 !important;">ACTION</span>
+                  <th class="border-0 py-2 px-3 text-center">
+                    <span class="fw-medium" style="font-size: 12px; letter-spacing: 0.5px; color: #6c757d; text-transform: uppercase;">Action</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let item of filteredItems; let i = index" class="table-row-hover">
                   <td class="border-0 py-3 px-4">
+                    <span class="fw-semibold text-dark" style="font-size: 14px; color: #2c3e50 !important;">{{ item.name }}</span>
+                  </td>
+                  <td class="border-0 py-3 px-4">
                     <span class="badge bg-light text-dark border rounded-pill px-3 py-2 fw-semibold" 
                           style="font-size: 12px; letter-spacing: 0.5px; color: #2c3e50 !important;">
                       {{ item.category }}
                     </span>
-                  </td>
-                  <td class="border-0 py-3 px-4">
-                    <span class="fw-semibold text-dark" style="font-size: 14px; color: #2c3e50 !important;">{{ item.name }}</span>
                   </td>
                   <td class="border-0 py-3 px-4">
                     <ng-container *ngIf="editingIndex !== i; else datepicker">
@@ -236,11 +230,14 @@
                   </td>
                   <td class="border-0 py-3 px-4 text-center">
                     <button
-                      class="btn btn-sm rounded-pill px-4 py-2 fw-semibold"
-                      style="font-size: 12px; letter-spacing: 0.3px; min-width: 80px;"
+                      class="btn btn-sm rounded-pill px-4 py-2 fw-semibold d-flex align-items-center justify-content-center"
+                      style="font-size: 12px; letter-spacing: 0.3px; min-width: 90px;"
                       [ngClass]="editingIndex === i ? 'btn-success' : 'btn-outline-warning'"
                       (click)="toggleDatepicker(i)"
                     >
+                      <i class="me-1" 
+                         [ngClass]="editingIndex === i ? 'ti ti-device-floppy' : 'ti ti-refresh'" 
+                         style="font-size: 14px;"></i>
                       {{ editingIndex === i ? 'SAVE' : 'RENEW' }}
                     </button>
                   </td>

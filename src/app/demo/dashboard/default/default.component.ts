@@ -204,9 +204,9 @@ export class DefaultComponent {
   // pagination and infinite scroll
   page = 1;
   pageSize = 5;
-  initialDisplayCount = 8; // Show 8 records initially to force scroll
+  initialDisplayCount = 5; // Show 5 records initially
   loadMoreCount = 5; // Load 5 more when scrolling
-  currentDisplayCount = 8; // Current number of items being displayed
+  currentDisplayCount = 5; // Current number of items being displayed
   isLoading = false; // Loading state for infinite scroll
   filterDate: NgbDateStruct | null = null;
 

@@ -34,7 +34,7 @@ export class BarChartComponent {
       ],
       chart: {
         type: "bar",
-        height: 350
+        height: 370
       },
       plotOptions: {
         bar: {
@@ -45,7 +45,16 @@ export class BarChartComponent {
         }
       },
       dataLabels: {
-        enabled: false
+        enabled: true,
+        style: {
+          fontSize: '11px',
+          fontWeight: 600,
+          colors: ['#ffffff']
+        },
+        offsetY: -5,
+        formatter: function(val) {
+          return val.toString();
+        }
       },
       stroke: {
         show: true,
@@ -63,11 +72,33 @@ export class BarChartComponent {
           "Aug",
           "Sep",
           "Oct"
-        ]
+        ],
+        labels: {
+          style: {
+            fontSize: '12px',
+            fontWeight: 500,
+            colors: ['#2c3e50']
+          }
+        }
       },
       yaxis: {
         title: {
-          text: "Number Records"
+          text: "Number Records",
+          style: {
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#2c3e50'
+          }
+        },
+        labels: {
+          style: {
+            fontSize: '12px',
+            fontWeight: 500,
+            colors: ['#2c3e50']
+          },
+          formatter: function(val) {
+            return Math.floor(val).toString();
+          }
         }
       },
       fill: {
